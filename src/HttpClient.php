@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Fan\EasyWeChat;
 
 use EasyWeChat\Kernel\HttpClient\RequestUtil;
+use EasyWeChat\Kernel\HttpClient\ScopingHttpClient;
+use EasyWeChat\Kernel\Support\Arr;
 use Hyperf\Context\Context;
 use Symfony\Component\HttpClient\HttpClient as SymfonyClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -45,9 +47,17 @@ class HttpClient implements HttpClientInterface
 
     protected function client(): HttpClientInterface
     {
-        return Context::getOrSet($this->contextKey(), function () {
+        $optionsByRegexp = Arr::get($this->option, 'options_by_regexp', []);
+        unset($this->option['options_by_regexp']);
+
+        $client = Context::getOrSet($this->contextKey(), function () {
             return SymfonyClient::create(RequestUtil::formatDefaultOptions($this->option));
         });
+
+        if (! empty($optionsByRegexp)) {
+            $client = new ScopingHttpClient($client, $optionsByRegexp);
+        }
+        return $client;
     }
 
     protected function contextKey(): string
