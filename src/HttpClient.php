@@ -1,14 +1,6 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
- */
 
 namespace Fan\EasyWeChat;
 
@@ -41,8 +33,11 @@ class HttpClient implements HttpClientInterface
 
     public function withOptions(array $options): static
     {
+        // 合并 如果键名相同，则后面的数组的值将会覆盖前面数组的值
         $this->option = array_replace($this->option, $options);
+
         $client = $this->client()->withOptions($options);
+        // 唯一值
         Context::set($this->contextKey(), $client);
         return $this;
     }
