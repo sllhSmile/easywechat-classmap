@@ -29,11 +29,13 @@ class HttpClient implements HttpClientInterface
 
     public function request(string $method, string $url, array $options = []): ResponseInterface
     {
+        // 在请求时才实例化客户端
         return $this->client()->request($method, $url, $options);
     }
 
     public function stream(iterable|ResponseInterface $responses, ?float $timeout = null): ResponseStreamInterface
     {
+        // 在请求时才实例化客户端
         return $this->client()->stream($responses, $timeout);
     }
 

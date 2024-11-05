@@ -33,7 +33,10 @@ trait InteractWithHttpClient
     {
         $this->httpClient = $httpClient;
 
-        if ($this instanceof LoggerAwareInterface && $httpClient instanceof LoggerAwareInterface && \property_exists($this, 'logger') && $this->logger) {
+        if ($this instanceof LoggerAwareInterface
+            && $httpClient instanceof LoggerAwareInterface
+            && property_exists($this, 'logger')
+            && $this->logger) {
             $httpClient->setLogger($this->logger);
         }
 
